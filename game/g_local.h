@@ -864,6 +864,7 @@ typedef struct
 	char*       playerClass;
 	int         sanity; 
 	int         maxSanity; 
+	float       sanityTime; 
 
 	qboolean	spectator;			// client is a spectator
 } client_persistant_t;

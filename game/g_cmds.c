@@ -918,11 +918,15 @@ void Cmd_SetClass_f(edict_t* ent) {
 		cl->pers.playerClass = "Academic";
 		ent->health = 75;
 		ent->max_health = 75;
+		cl->pers.sanity = 200;
+		cl->pers.maxSanity = 200;
 	}
 	else if (Q_stricmp(name, "Gangster") == 0) {
 		cl->pers.playerClass = "Gangster";
 		ent->health = 200;
 		ent->max_health = 200;
+		cl->pers.sanity = 50;
+		cl->pers.maxSanity = 50;
 		// Give Starting Items 
 		item = FindItem("Bullets");
 		cl->pers.inventory[ITEM_INDEX(item)] = 100;
@@ -933,12 +937,14 @@ void Cmd_SetClass_f(edict_t* ent) {
 	else if (Q_stricmp(name, "Private Dick") == 0) {
 		ent->health = 100;
 		ent->max_health = 100;
+		cl->pers.sanity = 100;
+		cl->pers.maxSanity = 100;
 		cl->pers.playerClass = "Private Dick";
 	}
 	else
 		gi.cprintf(ent, PRINT_CHAT, "could not chanage class %s is not valid \n", name);
 
-	gi.cprintf(ent, PRINT_CHAT, "Your Current Class is %s\n", cl->pers.playerClass);
+	gi.cprintf(ent, PRINT_CHAT, "class Changed to %s\n", cl->pers.playerClass);
 }
 void Cmd_GetClass_f(edict_t* ent) {
 	gclient_t* cl;

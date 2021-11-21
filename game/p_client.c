@@ -630,6 +630,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.playerClass = "Private Dick";
 	client->pers.sanity = 100; 
 	client->pers.maxSanity = 100; 
+	client->pers.sanityTime = 0; 
 }
 
 
@@ -1589,6 +1590,13 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			&& (ucmd->buttons & BUTTON_ANY) )
 			level.exitintermission = true;
 		return;
+	}
+	
+	// apply sanity effect 
+	if (client->pers.sanity < 200 && level.time > client->pers.sanityTime) {
+		gi.sound(ent, CHAN_VOICE, gi.soundindex("infantry/inflies1.wav"), 1, ATTN_NORM, 0);
+	
+		client->pers.sanityTime = level.time + 2.5;
 	}
 
 	pm_passent = ent;

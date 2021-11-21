@@ -901,6 +901,55 @@ void Cmd_PlayerList_f(edict_t *ent)
 
 
 /*
+=======================================
+ Get and set classes for Lovecraft mod 
+=======================================
+*/
+
+void Cmd_SetClass_f(edict_t* ent) {
+	gclient_t* cl;
+	char* name;
+	gitem_t* item;
+	name = gi.args();
+
+	cl = ent->client;
+
+	if (Q_stricmp(name, "Academic") == 0) {
+		cl->pers.playerClass = "Academic";
+		ent->health = 75;
+		ent->max_health = 75;
+	}
+	else if (Q_stricmp(name, "Gangster") == 0) {
+		cl->pers.playerClass = "Gangster";
+		ent->health = 200;
+		ent->max_health = 200;
+		// Give Starting Items 
+		item = FindItem("Bullets");
+		cl->pers.inventory[ITEM_INDEX(item)] = 100;
+		item = FindItem("Tommy Gun");
+		cl->pers.inventory[ITEM_INDEX(item)] = 1;
+	}
+
+	else if (Q_stricmp(name, "Private Dick") == 0) {
+		ent->health = 100;
+		ent->max_health = 100;
+		cl->pers.playerClass = "Private Dick";
+	}
+	else
+		gi.cprintf(ent, PRINT_CHAT, "could not chanage class %s is not valid \n", name);
+
+	gi.cprintf(ent, PRINT_CHAT, "Your Current Class is %s\n", cl->pers.playerClass);
+}
+void Cmd_GetClass_f(edict_t* ent) {
+	gclient_t* cl;
+	cl = ent->client;
+	gi.cprintf(ent, PRINT_CHAT, "Your Current Class is %s\n", cl->pers.playerClass);
+	gi.cprintf(ent, PRINT_CHAT, "Your Current health is %d of %d\n", ent->health, ent->max_health);
+	gi.cprintf(ent, PRINT_CHAT, "Your Current sanity is %d of %d\n", cl->pers.sanity, cl->pers.maxSanity);
+}
+
+
+/*
 =================
 ClientCommand
 =================
@@ -987,6 +1036,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	else if (Q_stricmp(cmd, "getClass") == 0)
+		Cmd_GetClass_f(ent);
+	else if (Q_stricmp(cmd, "setClass") == 0)
+		Cmd_SetClass_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

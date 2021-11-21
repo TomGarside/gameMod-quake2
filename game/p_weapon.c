@@ -335,6 +335,8 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 		}
 	}
 
+
+
 	// change to this weapon when down
 	ent->client->newweapon = item;
 }
@@ -846,13 +848,28 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 
 void Weapon_Blaster_Fire (edict_t *ent)
 {
-	int		damage;
 
-	if (deathmatch->value)
-		damage = 15;
-	else
-		damage = 10;
-	Blaster_Fire (ent, vec3_origin, damage, false, EF_BLASTER);
+	int		damage = 6;
+	int     kick = 4; 
+	vec3_t		start;
+	vec3_t		forward, right;
+	vec3_t		offset;
+
+
+	AngleVectors(ent->client->v_angle, forward, right, NULL);
+
+	VectorScale(forward, -2, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -2;
+
+	VectorSet(offset, 0, 8, ent->viewheight - 8);
+	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+
+	fire_bullet(ent, start, forward, damage, kick, 500, 500, MOD_MACHINEGUN);
+	gi.WriteByte(svc_muzzleflash);
+	gi.WriteShort(ent - g_edicts);
+	gi.WriteByte(MZ_MACHINEGUN | is_silenced);
+	gi.multicast(ent->s.origin, MULTICAST_PVS);
+	PlayerNoise(ent, start, PNOISE_WEAPON);
 	ent->client->ps.gunframe++;
 }
 
@@ -967,10 +984,10 @@ void Machinegun_Fire (edict_t *ent)
 		return;
 	}
 
-	if (ent->client->ps.gunframe == 5)
-		ent->client->ps.gunframe = 4;
-	else
-		ent->client->ps.gunframe = 5;
+	//if (ent->client->ps.gunframe == 5)
+	//	ent->client->ps.gunframe = 4;
+	//else
+	//	ent->client->ps.gunframe = 5;
 
 	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
@@ -1180,20 +1197,27 @@ SHOTGUN / SUPERSHOTGUN
 
 ======================================================================
 */
-
+// tom moded shotgun to tommy gun
 void weapon_shotgun_fire (edict_t *ent)
 {
 	vec3_t		start;
 	vec3_t		forward, right;
 	vec3_t		offset;
-	int			damage = 4;
-	int			kick = 8;
+	int			damage = 10;
+	int			kick = 4;
 
-	if (ent->client->ps.gunframe == 9)
+	
+	if (!(ent->client->buttons & BUTTON_ATTACK))
 	{
+		//ent->client->machinegun_shots = 0;
 		ent->client->ps.gunframe++;
 		return;
 	}
+
+	if (ent->client->ps.gunframe == 9)
+		ent->client->ps.gunframe = 8;
+	else
+		ent->client->ps.gunframe = 9;
 
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
@@ -1210,14 +1234,15 @@ void weapon_shotgun_fire (edict_t *ent)
 	}
 
 	if (deathmatch->value)
-		fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
+		fire_shotgun(ent, start, forward, damage, kick, 500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
 	else
-		fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_SHOTGUN_COUNT, MOD_SHOTGUN);
-
+		//fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_SHOTGUN_COUNT, MOD_SHOTGUN);
+		// tom modded to fire bullet 
+		fire_bullet(ent,start,forward,damage,kick,500,500,MOD_MACHINEGUN);
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_SHOTGUN | is_silenced);
+	gi.WriteByte (MZ_MACHINEGUN | is_silenced);
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -1229,10 +1254,10 @@ void weapon_shotgun_fire (edict_t *ent)
 
 void Weapon_Shotgun (edict_t *ent)
 {
-	static int	pause_frames[]	= {22, 28, 34, 0};
-	static int	fire_frames[]	= {8, 9, 0};
+	static int	pause_frames[]	= {10,0};
+	static int	fire_frames[]	= {8,9,0};
 
-	Weapon_Generic (ent, 7, 18, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
+	Weapon_Generic (ent, 7, 9, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
 }
 
 
@@ -1314,8 +1339,8 @@ void weapon_railgun_fire (edict_t *ent)
 	}
 	else
 	{
-		damage = 150;
-		kick = 250;
+		damage = 50;
+		kick = 50;
 	}
 
 	if (is_quad)
@@ -1331,12 +1356,12 @@ void weapon_railgun_fire (edict_t *ent)
 
 	VectorSet(offset, 0, 7,  ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rail (ent, start, forward, damage, kick);
-
+	//fire_rail (ent, start, forward, damage, kick);
+	fire_bullet(ent, start, forward, damage, kick, 10, 10, MOD_MACHINEGUN);
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_RAILGUN | is_silenced);
+	gi.WriteByte (MZ_SSHOTGUN | is_silenced);
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;

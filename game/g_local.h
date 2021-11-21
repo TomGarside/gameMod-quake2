@@ -751,6 +751,7 @@ void respawn (edict_t *ent);
 void BeginIntermission (edict_t *targ);
 void PutClientInServer (edict_t *ent);
 void InitClientPersistant (gclient_t *client);
+void InitClientPersistantClass(gclient_t* client, char*);
 void InitClientResp (gclient_t *client);
 void InitBodyQue (void);
 void ClientBeginServerFrame (edict_t *ent);
@@ -860,6 +861,9 @@ typedef struct
 
 	int			game_helpchanged;
 	int			helpchanged;
+	char*       playerClass;
+	int         sanity; 
+	int         maxSanity; 
 
 	qboolean	spectator;			// client is a spectator
 } client_persistant_t;

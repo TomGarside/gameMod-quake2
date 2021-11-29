@@ -292,6 +292,7 @@ void InfantryMachineGun (edict_t *self)
 		VectorSubtract (self->s.angles, aimangles[flash_number-MZ2_INFANTRY_MACHINEGUN_2], vec);
 		AngleVectors (vec, forward, NULL, NULL);
 	}
+	
 
 	monster_fire_bullet (self, start, forward, 3, 4, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
 }

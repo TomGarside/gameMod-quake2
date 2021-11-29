@@ -450,6 +450,7 @@ void SP_monster_berserk (edict_t *self)
 
 	self->monsterinfo.currentmove = &berserk_move_stand;
 	self->monsterinfo.scale = MODEL_SCALE;
+	self->damagedPlayerSanity = 0; 
 
 	gi.linkentity (self);
 

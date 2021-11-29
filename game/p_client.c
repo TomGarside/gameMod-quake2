@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "g_local.h"
 #include "m_player.h"
+#include "raven.h"
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
@@ -674,6 +675,8 @@ void FetchClientEntData (edict_t *ent)
 {
 	ent->health = ent->client->pers.health;
 	ent->max_health = ent->client->pers.max_health;
+	ent->sanity = ent->client->pers.sanity;
+	ent->max_sanity = ent->client->pers.maxSanity;
 	ent->flags |= ent->client->pers.savedFlags;
 	if (coop->value)
 		ent->client->resp.score = ent->client->pers.score;
@@ -1572,6 +1575,7 @@ This will be called once for each client frame, which will
 usually be a couple times for each server frame.
 ==============
 */
+#define RAVEN_MAX 107
 void ClientThink (edict_t *ent, usercmd_t *ucmd)
 {
 	gclient_t	*client;
@@ -1592,12 +1596,35 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		return;
 	}
 	
-	// apply sanity effect 
-	if (client->pers.sanity < 200 && level.time > client->pers.sanityTime) {
+	// apply sanity effects 
+	ent->current_effect = "poe";
+	// frog mode 
+	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "Tsathoggua") {
+		// init effect 
+		if (!ent->effect_active) {
+			gi.centerprintf(ent, "You have come to the attention of\n Tsathoggua\n");
+			ent->effect_active = 1;
+		}
+		//recurrant effects
 		gi.sound(ent, CHAN_VOICE, gi.soundindex("infantry/inflies1.wav"), 1, ATTN_NORM, 0);
-	
+		Cmd_spawnMonster_f(ent);
 		client->pers.sanityTime = level.time + 2.5;
 	}
+
+	// poet mode 
+	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "poe") {
+		if (!ent->effect_active) {
+			gi.centerprintf(ent, "You have come to the attention of\n Poe\n");
+			ent->effect_active = 1;
+			ent->ravenCount = 0;
+		}
+		if (ent->ravenCount == RAVEN_MAX)
+				ent->ravenCount = 0; 
+		gi.centerprintf(ent, raven[ent->ravenCount]);
+		ent->ravenCount++; 
+		client->pers.sanityTime = level.time + 2.5;
+	}
+
 
 	pm_passent = ent;
 

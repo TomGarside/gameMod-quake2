@@ -439,6 +439,20 @@ void SV_CalcBlend (edict_t *ent)
 	else if (contents & CONTENTS_WATER)
 		SV_AddBlend (0.5, 0.3, 0.2, 0.4, ent->client->ps.blend);
 
+	// add for sanity effects 
+	// intensity is linked to player sanity 
+	float aVal = 0.3f - (float)ent->sanity / 100;;
+	if (ent->effect_active && ent->current_effect == "Tsathoggua") {
+		
+		SV_AddBlend(0, 1, 0, aVal, ent->client->ps.blend);
+	}
+	if (ent->effect_active && ent->current_effect == "crazy") {
+		// randomly generate colors diferent effect type 
+		SV_AddBlend(crandom(), crandom(), crandom(), aVal, ent->client->ps.blend);
+	}
+	if (ent->effect_active && ent->current_effect == "poe") {
+		SV_AddBlend(0.3, 0.7, 0, aVal, ent->client->ps.blend);
+	}
 	// add for powerups
 	if (ent->client->quad_framenum > level.framenum)
 	{
@@ -446,7 +460,7 @@ void SV_CalcBlend (edict_t *ent)
 		if (remaining == 30)	// beginning to fade
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage2.wav"), 1, ATTN_NORM, 0);
 		if (remaining > 30 || (remaining & 4) )
-			SV_AddBlend (0, 0, 1, 0.08, ent->client->ps.blend);
+			SV_AddBlend (0, 1, 1, 0.08, ent->client->ps.blend);
 	}
 	else if (ent->client->invincible_framenum > level.framenum)
 	{

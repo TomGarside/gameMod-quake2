@@ -751,7 +751,6 @@ void respawn (edict_t *ent);
 void BeginIntermission (edict_t *targ);
 void PutClientInServer (edict_t *ent);
 void InitClientPersistant (gclient_t *client);
-void InitClientPersistantClass(gclient_t* client, char*);
 void InitClientResp (gclient_t *client);
 void InitBodyQue (void);
 void ClientBeginServerFrame (edict_t *ent);
@@ -1057,6 +1056,12 @@ struct edict_s
 	float		last_move_time;
 
 	int			health;
+	int         sanity;
+	int         max_sanity;
+	int         effect_active; 
+	char*       current_effect;
+	int         ravenCount;
+	int         damagedPlayerSanity;
 	int			max_health;
 	int			gib_health;
 	int			deadflag;

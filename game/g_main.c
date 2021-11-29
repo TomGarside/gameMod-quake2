@@ -85,6 +85,7 @@ void WriteLevel (char *filename);
 void ReadLevel (char *filename);
 void InitGame (void);
 void G_RunFrame (void);
+void Cmd_spawnMonster_f(edict_t* ent);
 
 
 //===================================================================

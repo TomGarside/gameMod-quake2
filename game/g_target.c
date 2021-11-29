@@ -380,7 +380,7 @@ void ED_CallSpawn (edict_t *ent);
 void use_target_spawner (edict_t *self, edict_t *other, edict_t *activator)
 {
 	edict_t	*ent;
-
+	
 	ent = G_Spawn();
 	ent->classname = self->target;
 	VectorCopy (self->s.origin, ent->s.origin);

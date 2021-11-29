@@ -120,7 +120,7 @@ edict_t *G_PickTarget (char *targetname)
 	edict_t	*ent = NULL;
 	int		num_choices = 0;
 	edict_t	*choice[MAXCHOICES];
-
+	
 	if (!targetname)
 	{
 		gi.dprintf("G_PickTarget called with NULL targetname\n");

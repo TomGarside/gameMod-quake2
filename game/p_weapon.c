@@ -234,9 +234,9 @@ NoAmmoWeaponChange
 void NoAmmoWeaponChange (edict_t *ent)
 {
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))]
-		&&  ent->client->pers.inventory[ITEM_INDEX(FindItem("railgun"))] )
+		&&  ent->client->pers.inventory[ITEM_INDEX(FindItem("Bolt Action Rifle"))] )
 	{
-		ent->client->newweapon = FindItem ("railgun");
+		ent->client->newweapon = FindItem ("Bolt Action Rifle");
 		return;
 	}
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("cells"))]
@@ -264,12 +264,12 @@ void NoAmmoWeaponChange (edict_t *ent)
 		return;
 	}
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))]
-		&&  ent->client->pers.inventory[ITEM_INDEX(FindItem("shotgun"))] )
+		&&  ent->client->pers.inventory[ITEM_INDEX(FindItem("Tommy Gun"))] )
 	{
-		ent->client->newweapon = FindItem ("shotgun");
+		ent->client->newweapon = FindItem ("Tommy Gun");
 		return;
 	}
-	ent->client->newweapon = FindItem ("blaster");
+	ent->client->newweapon = FindItem ("Detective Special");
 }
 
 /*

@@ -1016,26 +1016,97 @@ static void P_ProjectSource(gclient_t* client, vec3_t point, vec3_t distance, ve
 }
 
 void Cmd_castFireBall_f(edict_t* self) {
-	int		damage = 200;
-	int     kick = 40;
+	int		    damage = 100;
 	vec3_t		start;
 	vec3_t		forward, right;
 	vec3_t		offset;
+	int         shots = 10; 
+	int         spread = 5;
 
-	AngleVectors(self->client->v_angle, forward, right, NULL);
+	if (level.time > self->client->pers.spellCooldown) {
+		AngleVectors(self->client->v_angle, forward, right, NULL);
+		VectorScale(forward, -2, self->client->kick_origin);
+		self->client->kick_angles[0] = -2;
+		VectorSet(offset, 0, 8, self->viewheight - (8));
+		P_ProjectSource(self->client, self->s.origin, offset, forward, right, start);
+		start[0] -= 20;
+		start[1] -= 20;
 
-	VectorScale(forward, -2, self->client->kick_origin);
-	self->client->kick_angles[0] = -2;
-
-	VectorSet(offset, 0, 8, self->viewheight - 3);
-	P_ProjectSource(self->client, self->s.origin, offset, forward, right, start);
-
-	//add cooldown and sanity cost 
-	fire_blaster(self, start, forward, damage, 600, EF_BLASTER, false);
+		for (int e = 0; e < shots; e++) {
+			start[0] += spread;
+			start[1] += spread;
+			fire_blaster(self, start, forward, damage, 600, EF_BLASTER, false);
+		}
+		self->sanity -= 10;
+		self->client->pers.spellCooldown = level.time + 10;
+	}
+	else {
+		gi.centerprintf(self, "Your mind Burns!\n %.2fs  cooldown remaining", self->client->pers.spellCooldown - level.time);
+	}
 
 
 }
+void Cmd_castHeal_f(edict_t* self) {
 
+	if (level.time > self->client->pers.spellCooldown) {
+		if (self->health + 50 < self->max_health)
+			self->health += 50;
+		else
+			self->health = self->max_health;
+
+		self->sanity -= 10;
+		self->client->pers.spellCooldown = level.time + 5;
+		
+	}
+	else {
+		gi.centerprintf(self, "Your mind Burns!\n %.2fs  cooldown remaining", self->client->pers.spellCooldown - level.time);
+	}
+	 
+}
+
+
+void Cmd_castBurst_f(edict_t* self) {
+
+	if (level.time > self->client->pers.spellCooldown) {
+		self->client->pers.burstFlag = 1; 
+
+		self->sanity -= 20;
+		self->client->pers.spellCooldown = level.time + 5;
+
+	}
+	else {
+		gi.centerprintf(self, "Your mind Burns!\n %.5fs  cooldown remaining", self->client->pers.spellCooldown - level.time);
+	}
+
+}
+void Cmd_castInvisible_f(edict_t* self) {
+
+	if (level.time > self->client->pers.spellCooldown) {
+		self->flags ^= FL_NOTARGET;
+
+		self->sanity -= 20;
+		self->client->pers.spellCooldown = level.time + 30;
+
+	}
+	else {
+		gi.centerprintf(self, "Your mind Burns!\n %.2fs  cooldown remaining", self->client->pers.spellCooldown - level.time);
+	}
+
+}
+void Cmd_castGod_f(edict_t* self) {
+
+	if (level.time > self->client->pers.spellCooldown) {
+		self->flags ^= FL_GODMODE;
+
+		self->sanity -= 10;
+		self->client->pers.spellCooldown = level.time + 10 ;
+
+	}
+	else {
+		gi.centerprintf(self, "Your mind Burns!\n %.2fs  cooldown remaining", self->client->pers.spellCooldown - level.time);
+	}
+
+}
 
 
 /*
@@ -1135,6 +1206,14 @@ void ClientCommand (edict_t *ent)
 		Cmd_spawnMonster_f(ent);
 	else if (Q_stricmp(cmd, "fireball") == 0)
 		Cmd_castFireBall_f(ent);
+	else if (Q_stricmp(cmd, "heal") == 0)
+		Cmd_castHeal_f(ent);
+	else if (Q_stricmp(cmd, "burst") == 0)
+		Cmd_castBurst_f(ent);
+	else if (Q_stricmp(cmd, "shield") == 0)
+		Cmd_castGod_f(ent);
+	else if (Q_stricmp(cmd, "invisible") == 0)
+		Cmd_castInvisible_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

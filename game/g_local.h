@@ -864,6 +864,8 @@ typedef struct
 	int         sanity; 
 	int         maxSanity; 
 	float       sanityTime; 
+	float       spellCooldown;
+	int         burstFlag;
 
 	qboolean	spectator;			// client is a spectator
 } client_persistant_t;

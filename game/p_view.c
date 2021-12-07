@@ -446,11 +446,11 @@ void SV_CalcBlend (edict_t *ent)
 		
 		SV_AddBlend(0, 1, 0, aVal, ent->client->ps.blend);
 	}
-	if (ent->effect_active && ent->current_effect == "crazy") {
+	if (ent->effect_active && ent->current_effect == "Cthulhu") {
 		// randomly generate colors diferent effect type 
 		SV_AddBlend(crandom(), crandom(), crandom(), aVal, ent->client->ps.blend);
 	}
-	if (ent->effect_active && ent->current_effect == "poe") {
+	if (ent->effect_active && ent->current_effect == "Nyarlathotep") {
 		SV_AddBlend(0.3, 0.7, 0, aVal, ent->client->ps.blend);
 	}
 	// add for powerups

@@ -297,11 +297,15 @@ qboolean visible (edict_t *self, edict_t *other)
 	trace = gi.trace (spot1, vec3_origin, vec3_origin, spot2, self, MASK_OPAQUE);
 	
 	if (trace.fraction == 1.0)
+		//burst spell
+		if (other->classname == "player" && other->client->pers.spellCooldown > level.time && other->client->pers.burstFlag)
+			KillBox(self);
+
 		if (other->classname == "player" && !self->damagedPlayerSanity) {
 			// TODO add monster specific sanity damage 
 			other->sanity -= 3;
 			self->damagedPlayerSanity = 1;
-			gi.dprintf("spotted ya sanity :%d \n", other->sanity);
+			gi.dprintf("Sanity :%d  of %d\n", other->sanity, other->max_sanity);
 
 		}
 		return true;

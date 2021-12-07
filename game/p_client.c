@@ -1595,9 +1595,38 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			level.exitintermission = true;
 		return;
 	}
+
+	// clean up spells 
+	if (level.time > ent->client->pers.spellCooldown) {
+		ent->client->pers.burstFlag = 0;
+
+		if (ent->flags & FL_NOTARGET)
+			ent->flags ^= FL_NOTARGET;
+
+		if(ent->flags & FL_GODMODE)
+			ent->flags ^= FL_GODMODE;
+	}
+
+	//select current effect
+	float randNo = fabs(crandom());
 	
 	// apply sanity effects 
-	ent->current_effect = "poe";
+	if (randNo > 0 && randNo < 0.33 && ent->sanity > 31 ) {
+		ent->current_effect = "Tsathoggua";
+		//gi.dprintf("%s", ent->current_effect);
+	}
+	else if (randNo >= 0.33 && randNo < 0.66 && ent->sanity > 31) {
+		ent->current_effect = "Nyarlathotep";
+		//gi.dprintf("%s", ent->current_effect);
+	}
+	else if (randNo >= 0.66 && randNo < 0.99 && ent->sanity > 31) {
+		ent->current_effect = "Cthulhu";
+		//gi.dprintf("%s", ent->current_effect);
+	}
+	if (ent->sanity < 0) {
+		KillBox(ent);
+		gi.centerprintf("You lose your mind to %s", ent->current_effect);
+	}
 	// frog mode 
 	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "Tsathoggua") {
 		// init effect 
@@ -1612,9 +1641,9 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	}
 
 	// poet mode 
-	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "poe") {
+	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "Nyarlathotep") {
 		if (!ent->effect_active) {
-			gi.centerprintf(ent, "You have come to the attention of\n Poe\n");
+			gi.centerprintf(ent, "You have come to the attention of\n  Nyarlathotep \n");
 			ent->effect_active = 1;
 			ent->ravenCount = 0;
 		}
@@ -1624,7 +1653,13 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		ent->ravenCount++; 
 		client->pers.sanityTime = level.time + 2.5;
 	}
-
+	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "Cthulhu") {
+		if (!ent->effect_active) {
+			gi.centerprintf(ent, "You have come to the attention of\n Cthulhu \n");
+			ent->effect_active = 1;
+		}
+		client->pers.sanityTime = level.time + 2.5;
+	}
 
 	pm_passent = ent;
 

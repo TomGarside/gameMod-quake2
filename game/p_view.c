@@ -441,7 +441,7 @@ void SV_CalcBlend (edict_t *ent)
 
 	// add for sanity effects 
 	// intensity is linked to player sanity 
-	float aVal = 0.3f - (float)ent->sanity / 100;;
+	float aVal = 0.3f - (float)ent->sanity / 100;
 	if (ent->effect_active && ent->current_effect == "Tsathoggua") {
 		
 		SV_AddBlend(0, 1, 0, aVal, ent->client->ps.blend);
@@ -453,6 +453,12 @@ void SV_CalcBlend (edict_t *ent)
 	if (ent->effect_active && ent->current_effect == "Nyarlathotep") {
 		SV_AddBlend(0.3, 0.7, 0, aVal, ent->client->ps.blend);
 	}
+	// for burst spell 
+	if (ent->client->pers.burstFlag) {
+
+		SV_AddBlend(1, 0, 0, 0.3, ent->client->ps.blend);
+	}
+
 	// add for powerups
 	if (ent->client->quad_framenum > level.framenum)
 	{

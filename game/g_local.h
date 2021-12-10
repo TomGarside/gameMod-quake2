@@ -866,6 +866,7 @@ typedef struct
 	float       sanityTime; 
 	float       spellCooldown;
 	int         burstFlag;
+	int         burstFlagViolin;
 
 	qboolean	spectator;			// client is a spectator
 } client_persistant_t;

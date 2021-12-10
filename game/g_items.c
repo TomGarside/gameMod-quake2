@@ -1528,7 +1528,7 @@ always owned, never in the world
 		"models/weapons/g_bfg/tris.md2", EF_ROTATE,
 		"models/weapons/v_bfg/tris.md2",
 /* icon */		"w_bfg",
-/* pickup */	"BFG10K",
+/* pickup */	"Zinns Violin",
 		0,
 		50,
 		"Cells",

@@ -300,6 +300,8 @@ qboolean visible (edict_t *self, edict_t *other)
 		//burst spell
 		if (other->classname == "player" && other->client->pers.spellCooldown > level.time && other->client->pers.burstFlag)
 			KillBox(self);
+	    if (other->classname == "player" && other->client->pers.burstFlagViolin)
+		    KillBox(self);
 
 		if (other->classname == "player" && !self->damagedPlayerSanity) {
 			// TODO add monster specific sanity damage 

@@ -307,7 +307,7 @@ qboolean visible (edict_t *self, edict_t *other)
 			// TODO add monster specific sanity damage 
 			other->sanity -= 3;
 			self->damagedPlayerSanity = 1;
-			gi.dprintf("Sanity :%d  of %d\n", other->sanity, other->max_sanity);
+			//gi.dprintf("Sanity :%d  of %d\n", other->sanity, other->max_sanity);
 
 		}
 		return true;

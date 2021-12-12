@@ -1071,7 +1071,7 @@ void Cmd_castBurst_f(edict_t* self) {
 		self->client->pers.burstFlag = 1; 
 
 		self->sanity -= 20;
-		self->client->pers.spellCooldown = level.time + 5;
+		self->client->pers.spellCooldown = level.time + 20;
 
 	}
 	else {

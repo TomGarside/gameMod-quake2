@@ -992,6 +992,16 @@ void Cmd_spawnMonster_f(edict_t* self) {
 
 	newent = G_Spawn();
 	newent->classname = "monster_mutant";
+
+	if (self->current_effect == "Tsathoggua")
+		newent->classname = "monster_mutant";
+
+	if (self->current_effect == "Nyarlathotep")
+		newent->classname = "monster_brain";
+	
+	if (self->current_effect == "Cthulhu")
+		newent->classname = "monster_chick";
+
 	vec3_t newOrigin, newAngles;
 	VectorCopy(self->s.origin, newOrigin);
 	newOrigin[1] += 100;

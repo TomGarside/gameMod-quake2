@@ -1636,7 +1636,8 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		}
 		//recurrant effects
 		gi.sound(ent, CHAN_VOICE, gi.soundindex("infantry/inflies1.wav"), 1, ATTN_NORM, 0);
-		Cmd_spawnMonster_f(ent);
+		if (ent->sanity < 15)
+			Cmd_spawnMonster_f(ent);
 		client->pers.sanityTime = level.time + 2.5;
 	}
 
@@ -1651,6 +1652,8 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				ent->ravenCount = 0; 
 		gi.centerprintf(ent, raven[ent->ravenCount]);
 		ent->ravenCount++; 
+		if (ent->sanity < 15)
+			Cmd_spawnMonster_f(ent);
 		client->pers.sanityTime = level.time + 2.5;
 	}
 	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "Cthulhu") {
@@ -1658,6 +1661,8 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			gi.centerprintf(ent, "You have come to the attention of\n Cthulhu \n");
 			ent->effect_active = 1;
 		}
+		if (ent->sanity < 15)
+			Cmd_spawnMonster_f(ent);
 		client->pers.sanityTime = level.time + 2.5;
 	}
 

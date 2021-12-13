@@ -740,6 +740,7 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 		ent->client->pers.inventory[ent->client->ammo_index]--;
+	ent->sanity -= 1;
 }
 
 void Weapon_GrenadeLauncher (edict_t *ent)
@@ -1316,8 +1317,10 @@ void weapon_bfg_fire (edict_t *ent)
 		fire_rail(ent, start, forward, 0, 10);
 		if (!((int)dmflags->value & DF_INFINITE_AMMO))
 			ent->client->pers.inventory[ent->client->ammo_index]--;
+		
 
 	}
+	ent->sanity -= 1;
 }
 
 void Weapon_BFG (edict_t *ent)

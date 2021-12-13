@@ -112,7 +112,7 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 
 	if (!(tr.ent->svflags & SVF_MONSTER) && (!tr.ent->client))
 		return false;
-
+	tr.ent->velocity[2] = 20000;
 	// do our special form of knockback here
 	VectorMA (self->enemy->absmin, 0.5, self->enemy->size, v);
 	VectorSubtract (v, point, v);
@@ -480,6 +480,7 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 	}
 
 	ent->enemy = other;
+	
 	Grenade_Explode (ent);
 }
 
@@ -752,7 +753,7 @@ void bfg_explode (edict_t *self)
 			gi.WriteByte (TE_BFG_EXPLOSION);
 			gi.WritePosition (ent->s.origin);
 			gi.multicast (ent->s.origin, MULTICAST_PHS);
-			T_Damage (ent, self, self->owner, self->velocity, ent->s.origin, vec3_origin, (int)points, 0, DAMAGE_ENERGY, MOD_BFG_EFFECT);
+			//T_Damage (ent, self, self->owner, self->velocity, ent->s.origin, vec3_origin, (int)points, 0, DAMAGE_ENERGY, MOD_BFG_EFFECT);
 		}
 	}
 
@@ -778,7 +779,7 @@ void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 
 	// core explosion - prevents firing it into the wall/floor
 	if (other->takedamage)
-		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, 200, 0, 0, MOD_BFG_BLAST);
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, 3, 0, 0, MOD_BFG_BLAST);
 	T_RadiusDamage(self, self->owner, 200, other, 100, MOD_BFG_BLAST);
 
 	gi.sound (self, CHAN_VOICE, gi.soundindex ("weapons/bfg__x1b.wav"), 1, ATTN_NORM, 0);
@@ -904,8 +905,8 @@ void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, f
 	bfg->classname = "bfg blast";
 	bfg->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
 
-	bfg->think = bfg_think;
-	bfg->nextthink = level.time + FRAMETIME;
+	//bfg->think = bfg_think;
+	//bfg->nextthink = level.time + FRAMETIME;
 	bfg->teammaster = bfg;
 	bfg->teamchain = NULL;
 

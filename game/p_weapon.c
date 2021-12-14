@@ -740,7 +740,6 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 		ent->client->pers.inventory[ent->client->ammo_index]--;
-	ent->sanity -= 1;
 }
 
 void Weapon_GrenadeLauncher (edict_t *ent)
@@ -783,7 +782,7 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
+	fire_bullet (ent, start, forward, damage, 650, 0,0, MOD_MACHINEGUN);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -916,7 +915,7 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 void Weapon_HyperBlaster (edict_t *ent)
 {
 	static int	pause_frames[]	= {0};
-	static int	fire_frames[]	= {6, 0};
+	static int	fire_frames[] = { 6, 7, 8, 9, 10, 11, 0 };
 
 	Weapon_Generic (ent, 5, 20, 49, 53, pause_frames, fire_frames, Weapon_HyperBlaster_Fire);
 }

@@ -1224,6 +1224,7 @@ void SP_monster_soldier_x (edict_t *self)
 	self->monsterinfo.attack = soldier_attack;
 	self->monsterinfo.melee = NULL;
 	self->monsterinfo.sight = soldier_sight;
+	
 
 	gi.linkentity (self);
 
@@ -1244,7 +1245,7 @@ void SP_monster_soldier_light (edict_t *self)
 	}
 
 	SP_monster_soldier_x (self);
-
+	self->monsterinfo.sanityDamage = 1;
 	sound_pain_light = gi.soundindex ("soldier/solpain2.wav");
 	sound_death_light =	gi.soundindex ("soldier/soldeth2.wav");
 	gi.modelindex ("models/objects/laser/tris.md2");
@@ -1267,7 +1268,7 @@ void SP_monster_soldier (edict_t *self)
 	}
 
 	SP_monster_soldier_x (self);
-
+	self->monsterinfo.sanityDamage = 1;
 	sound_pain = gi.soundindex ("soldier/solpain1.wav");
 	sound_death = gi.soundindex ("soldier/soldeth1.wav");
 	gi.soundindex ("soldier/solatck1.wav");
@@ -1288,7 +1289,7 @@ void SP_monster_soldier_ss (edict_t *self)
 	}
 
 	SP_monster_soldier_x (self);
-
+	self->monsterinfo.sanityDamage = 1;
 	sound_pain_ss = gi.soundindex ("soldier/solpain3.wav");
 	sound_death_ss = gi.soundindex ("soldier/soldeth3.wav");
 	gi.soundindex ("soldier/solatck3.wav");

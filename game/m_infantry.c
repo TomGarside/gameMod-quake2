@@ -598,6 +598,7 @@ void SP_monster_infantry (edict_t *self)
 	self->monsterinfo.melee = NULL;
 	self->monsterinfo.sight = infantry_sight;
 	self->monsterinfo.idle = infantry_fidget;
+	self->monsterinfo.sanityDamage = 1;
 
 	gi.linkentity (self);
 

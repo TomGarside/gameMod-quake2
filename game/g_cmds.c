@@ -980,15 +980,23 @@ void Cmd_setSanity_f(edict_t* ent) {
 	
 	gi.cprintf(ent, PRINT_CHAT, "Your Current sanity is %d of %d\n", ent->sanity, ent->max_sanity);
 }
+static void P_ProjectSource(gclient_t* client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
+{
+	vec3_t	_distance;
+
+	VectorCopy(distance, _distance);
+	_distance[1] = 0;
+	G_ProjectSource(point, _distance, forward, right, result);
+}
 
 
 void Cmd_spawnMonster_f(edict_t* self) {
 
 	
 	//gi.cprintf(self, PRINT_CHAT, "SPAWNING \n");
-	
-
+	vec3_t  newAngles, offset, forward, right, start;
 	edict_t* newent;
+
 
 	newent = G_Spawn();
 	newent->classname = "monster_mutant";
@@ -1002,10 +1010,12 @@ void Cmd_spawnMonster_f(edict_t* self) {
 	if (self->current_effect == "Cthulhu")
 		newent->classname = "monster_chick";
 
-	vec3_t newOrigin, newAngles;
-	VectorCopy(self->s.origin, newOrigin);
-	newOrigin[1] += 100;
-	VectorCopy(newOrigin, newent->s.origin);
+
+	VectorSet(offset, 100, 100, self->viewheight - 8);
+	AngleVectors(self->client->v_angle, forward, right, NULL);
+	P_ProjectSource(self->client, self->s.origin, offset, forward, right, start);
+
+	VectorCopy(start, newent->s.origin);
 	VectorCopy(self->client->v_angle, newent->s.angles);
 	ED_CallSpawn(newent);
 	gi.unlinkentity(newent);
@@ -1016,14 +1026,6 @@ void Cmd_spawnMonster_f(edict_t* self) {
 
 
 }
-static void P_ProjectSource(gclient_t* client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
-{
-	vec3_t	_distance;
-
-	VectorCopy(distance, _distance);
-	_distance[1] = 0;
-	G_ProjectSource(point, _distance, forward, right, result);
-}
 
 void Cmd_castFireBall_f(edict_t* self) {
 	int		    damage = 100;
@@ -1032,6 +1034,10 @@ void Cmd_castFireBall_f(edict_t* self) {
 	vec3_t		offset;
 	int         shots = 10; 
 	int         spread = 5;
+	if (self->client->pers.playerClass == "Gangster" || self->client->pers.playerClass == "Private Dick") {
+		gi.centerprintf(self, "The Arcane Symbols hurt your head!");
+		return; 
+	}
 
 	if (level.time > self->client->pers.spellCooldown) {
 		AngleVectors(self->client->v_angle, forward, right, NULL);
@@ -1058,6 +1064,12 @@ void Cmd_castFireBall_f(edict_t* self) {
 }
 void Cmd_castHeal_f(edict_t* self) {
 
+	if (self->client->pers.playerClass == "Gangster") {
+		gi.centerprintf(self, "The Arcane Symbols hurt your head!");
+		return;
+	}
+
+
 	if (level.time > self->client->pers.spellCooldown) {
 		if (self->health + 50 < self->max_health)
 			self->health += 50;
@@ -1077,6 +1089,12 @@ void Cmd_castHeal_f(edict_t* self) {
 
 void Cmd_castBurst_f(edict_t* self) {
 
+	if (self->client->pers.playerClass == "Gangster" || self->client->pers.playerClass == "Private Dick") {
+		gi.centerprintf(self, "The Arcane Symbols hurt your head!");
+		return;
+	}
+
+
 	if (level.time > self->client->pers.spellCooldown) {
 		self->client->pers.burstFlag = 1; 
 
@@ -1090,6 +1108,11 @@ void Cmd_castBurst_f(edict_t* self) {
 
 }
 void Cmd_castInvisible_f(edict_t* self) {
+
+	if (self->client->pers.playerClass == "Gangster") {
+		gi.centerprintf(self, "The Arcane Symbols hurt your head!");
+		return;
+	}
 
 	if (level.time > self->client->pers.spellCooldown) {
 		self->flags ^= FL_NOTARGET;
@@ -1105,6 +1128,11 @@ void Cmd_castInvisible_f(edict_t* self) {
 }
 void Cmd_castGod_f(edict_t* self) {
 
+	if (self->client->pers.playerClass == "Gangster") {
+		gi.centerprintf(self, "The Arcane Symbols hurt your head!");
+		return;
+	}
+
 	if (level.time > self->client->pers.spellCooldown) {
 		self->flags ^= FL_GODMODE;
 
@@ -1118,6 +1146,21 @@ void Cmd_castGod_f(edict_t* self) {
 
 }
 
+void Cmd_forceMad_f(edict_t* self) {
+	char* var = gi.args();
+	self->forceEffect = 1; 
+	if (Q_stricmp(var, "A") == 0)
+		self->current_effect = "Tsathoggua";
+
+	else if (Q_stricmp(var, "B") == 0)
+		self->current_effect = "Nyarlathotep";
+
+	else if (Q_stricmp(var, "C") == 0)
+		self->current_effect == "Cthulhu";
+	
+
+
+}
 
 /*
 =================
@@ -1224,6 +1267,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_castGod_f(ent);
 	else if (Q_stricmp(cmd, "invisible") == 0)
 		Cmd_castInvisible_f(ent);
+	else if (Q_stricmp(cmd, "forceEffect") == 0)
+		Cmd_forceMad_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

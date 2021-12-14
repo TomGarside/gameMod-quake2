@@ -616,7 +616,7 @@ void SP_monster_flyer (edict_t *self)
 	self->monsterinfo.melee = flyer_melee;
 	self->monsterinfo.sight = flyer_sight;
 	self->monsterinfo.idle = flyer_idle;
-
+	self->monsterinfo.sanityDamage = 1;
 	gi.linkentity (self);
 
 	self->monsterinfo.currentmove = &flyer_move_stand;	

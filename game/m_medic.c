@@ -759,6 +759,7 @@ void SP_monster_medic (edict_t *self)
 	self->monsterinfo.idle = medic_idle;
 	self->monsterinfo.search = medic_search;
 	self->monsterinfo.checkattack = medic_checkattack;
+	self->monsterinfo.sanityDamage = 1;
 
 	gi.linkentity (self);
 

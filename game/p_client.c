@@ -1606,26 +1606,28 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		if(ent->flags & FL_GODMODE)
 			ent->flags ^= FL_GODMODE;
 	}
+	if (!ent->forceEffect) {
+		//select current effect
+		float randNo = fabs(crandom());
 
-	//select current effect
-	float randNo = fabs(crandom());
-	
-	// apply sanity effects 
-	if (randNo > 0 && randNo < 0.33 && ent->sanity > 31 ) {
-		ent->current_effect = "Tsathoggua";
-		//gi.dprintf("%s", ent->current_effect);
-	}
-	else if (randNo >= 0.33 && randNo < 0.66 && ent->sanity > 31) {
-		ent->current_effect = "Nyarlathotep";
-		//gi.dprintf("%s", ent->current_effect);
-	}
-	else if (randNo >= 0.66 && randNo < 0.99 && ent->sanity > 31) {
-		ent->current_effect = "Cthulhu";
-		//gi.dprintf("%s", ent->current_effect);
+		// apply sanity effects 
+		if (randNo > 0 && randNo < 0.33 && ent->sanity > 31) {
+			ent->current_effect = "Tsathoggua";
+			//gi.dprintf("%s", ent->current_effect);
+		}
+		else if (randNo >= 0.33 && randNo < 0.66 && ent->sanity > 31) {
+			ent->current_effect = "Nyarlathotep";
+			//gi.dprintf("%s", ent->current_effect);
+		}
+		else if (randNo >= 0.66 && randNo < 0.99 && ent->sanity > 31) {
+			ent->current_effect = "Cthulhu";
+			//gi.dprintf("%s", ent->current_effect);
+		}
 	}
 	if (ent->sanity < 0) {
-		KillBox(ent);
 		gi.centerprintf("You lose your mind to %s", ent->current_effect);
+		KillBox(ent);
+		
 	}
 	// frog mode 
 	if (ent->sanity < 31 && level.time > client->pers.sanityTime && ent->current_effect == "Tsathoggua") {

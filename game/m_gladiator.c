@@ -378,7 +378,7 @@ void SP_monster_gladiator (edict_t *self)
 	self->monsterinfo.sight = gladiator_sight;
 	self->monsterinfo.idle = gladiator_idle;
 	self->monsterinfo.search = gladiator_search;
-
+	self->monsterinfo.sanityDamage = 1;
 	gi.linkentity (self);
 	self->monsterinfo.currentmove = &gladiator_move_stand;
 	self->monsterinfo.scale = MODEL_SCALE;

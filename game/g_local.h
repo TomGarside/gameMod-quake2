@@ -442,7 +442,7 @@ typedef struct
 	int			lefty;
 	float		idle_time;
 	int			linkcount;
-
+	int         sanityDamage;
 	int			power_armor_type;
 	int			power_armor_power;
 } monsterinfo_t;
@@ -1065,6 +1065,7 @@ struct edict_s
 	char*       current_effect;
 	int         ravenCount;
 	int         damagedPlayerSanity;
+	int         forceEffect; 
 	int			max_health;
 	int			gib_health;
 	int			deadflag;

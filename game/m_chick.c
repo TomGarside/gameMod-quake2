@@ -654,7 +654,7 @@ void SP_monster_chick (edict_t *self)
 	VectorSet (self->maxs, 16, 16, 56);
 
 	self->health = 175;
-	self->gib_health = -70;
+	self->gib_health = -1;
 	self->mass = 200;
 
 	self->pain = chick_pain;
@@ -667,6 +667,7 @@ void SP_monster_chick (edict_t *self)
 	self->monsterinfo.attack = chick_attack;
 	self->monsterinfo.melee = chick_melee;
 	self->monsterinfo.sight = chick_sight;
+	self->monsterinfo.sanityDamage = 1;
 
 	gi.linkentity (self);
 

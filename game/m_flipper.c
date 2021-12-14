@@ -393,7 +393,7 @@ void SP_monster_flipper (edict_t *self)
 	self->monsterinfo.run = flipper_start_run;
 	self->monsterinfo.melee = flipper_melee;
 	self->monsterinfo.sight = flipper_sight;
-
+	self->monsterinfo.sanityDamage = 1;
 	gi.linkentity (self);
 
 	self->monsterinfo.currentmove = &flipper_move_stand;	

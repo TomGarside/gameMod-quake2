@@ -666,7 +666,7 @@ void SP_monster_brain (edict_t *self)
 
 	self->monsterinfo.power_armor_type = POWER_ARMOR_SCREEN;
 	self->monsterinfo.power_armor_power = 100;
-
+	self->monsterinfo.sanityDamage = 1;
 	gi.linkentity (self);
 
 	self->monsterinfo.currentmove = &brain_move_stand;	

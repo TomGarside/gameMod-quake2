@@ -304,8 +304,7 @@ qboolean visible (edict_t *self, edict_t *other)
 		    KillBox(self);
 
 		if (other->classname == "player" && !self->damagedPlayerSanity) {
-			// TODO add monster specific sanity damage 
-			other->sanity -= 3;
+			other->sanity -= self->monsterinfo.sanityDamage;
 			self->damagedPlayerSanity = 1;
 			//gi.dprintf("Sanity :%d  of %d\n", other->sanity, other->max_sanity);
 

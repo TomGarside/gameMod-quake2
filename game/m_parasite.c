@@ -542,6 +542,7 @@ void SP_monster_parasite (edict_t *self)
 	self->monsterinfo.attack = parasite_attack;
 	self->monsterinfo.sight = parasite_sight;
 	self->monsterinfo.idle = parasite_idle;
+	self->monsterinfo.sanityDamage = 1;
 
 	gi.linkentity (self);
 
